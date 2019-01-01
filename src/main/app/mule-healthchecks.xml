@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:schedulers="http://www.mulesoft.org/schema/mule/schedulers"
+    xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/schedulers http://www.mulesoft.org/schema/mule/schedulers/current/mule-schedulers.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+    <!-- this resource is for mule-healthchecks to generate health and poll healthchesk -->
+
+    <context:property-placeholder location="mule-healthchecks.properties" />
+    
+    <spring:beans>
+        <context:component-scan base-package="com.clarkjohn.mule.healthchecks" />
+    </spring:beans>
+    
+    <!-- poll healthchecks within Mule managed context every hour -->
+    <flow name="healthCheckPollingFlow" processingStrategy="synchronous">
+        <poll doc:name="Poll">
+            <fixed-frequency-scheduler frequency="1" timeUnit="HOURS" />
+            <component class="com.clarkjohn.mule.healthchecks.HealthCheckPollingService" doc:name="Java - HealthCheckPollingService" />
+        </poll>
+        <logger message="placeholder; 1 mule component is required after poll component" level="TRACE" doc:name="Logger - placeholder" />
+    </flow>
+
+    <!--  HttpHealthCheck.java is calling this flow as template to generate http healthchecks -->
+    <flow name="healthcheckTemplateFlow">
+        <logger message="placeholder; 1 mule component is required for flow" level="TRACE" doc:name="Logger - placeholder" />
+        <catch-exception-strategy doc:name="Catch Exception Strategy" logException="false">
+            <set-variable variableName="healthExceptionMessage" value="#[exception or null]" doc:name="Set - healthExceptionMessage" />
+        </catch-exception-strategy>
+    </flow>
+
+</mule>
