@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
@@ -10,27 +9,27 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 
     <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="80" doc:name="HTTP Listener Configuration" />
 
-    <http:request-config name="HTTPS_Request_Configuration_jsonplaceholder" protocol="HTTPS" host="jsonplaceholder.typicode.com" port="443"
-        doc:name="HTTPS Request Configuration">
+    <http:request-config name="HTTPS_Request_Configuration_jsonplaceholder" protocol="HTTPS" host="jsonplaceholder.typicode.com"
+        port="443" doc:name="HTTPS Request Configuration">
     </http:request-config>
 
     <flow name="PostsExampleFlow">
-        <http:listener config-ref="HTTP_Listener_Configuration" path="/posts"  doc:name="HTTP - /posts" />
-        <logger level="INFO" doc:name="Logger - All"/>
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/posts" doc:name="HTTP - /posts" />
+        <logger level="INFO" doc:name="Logger - All" />
         <http:request config-ref="HTTPS_Request_Configuration_jsonplaceholder" path="posts" method="GET" doc:name="HTTPS - jsonplaceholder /posts" />
         <set-payload value="#[payload]" doc:name="Set Payload" />
     </flow>
 
     <flow name="Todos1ExampleFlow">
-        <http:listener config-ref="HTTP_Listener_Configuration" path="/todos"  doc:name="HTTP - /todos" />
-        <logger level="INFO" doc:name="Logger - All"/>
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/todos" doc:name="HTTP - /todos" />
+        <logger level="INFO" doc:name="Logger - All" />
         <http:request config-ref="HTTPS_Request_Configuration_jsonplaceholder" path="todos/1" method="GET" doc:name="HTTPS - jsonplaceholder /todos/1" />
         <set-payload value="#[payload]" doc:name="Set Payload" />
     </flow>
 
     <flow name="Users1ExampleFlow">
-        <http:listener config-ref="HTTP_Listener_Configuration" path="/users"  doc:name="HTTP - /users" />
-        <logger level="INFO" doc:name="Logger - All"/>
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/users" doc:name="HTTP - /users" />
+        <logger level="INFO" doc:name="Logger - All" />
         <http:request config-ref="HTTPS_Request_Configuration_jsonplaceholder" path="users/1" method="GET" doc:name="HTTPS - jsonplaceholder /users/1" />
         <set-payload value="#[payload]" doc:name="Set Payload" />
     </flow>
