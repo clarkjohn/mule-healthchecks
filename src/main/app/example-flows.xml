@@ -11,6 +11,9 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 
     <http:request-config name="HTTPS_Request_Configuration_jsonplaceholder" protocol="HTTPS" host="jsonplaceholder.typicode.com"
         port="443" doc:name="HTTPS Request Configuration">
+        <tls:context>
+            <tls:trust-store path="${java.home}\lib\security\cacerts" password="changeit" type="jks" insecure="true" />
+        </tls:context>
     </http:request-config>
 
     <flow name="PostsExampleFlow">
