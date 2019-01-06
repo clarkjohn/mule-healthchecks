@@ -24,7 +24,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
     <!-- poll healthchecks within Mule managed context every hour -->
     <flow name="healthCheckPollingFlow" processingStrategy="synchronous">
         <poll doc:name="Poll">
-            <fixed-frequency-scheduler frequency="1" timeUnit="HOURS" />
+            <fixed-frequency-scheduler frequency="60" timeUnit="MINUTES" startDelay="1"/>
             <component class="com.clarkjohn.mule.healthchecks.HealthCheckPollingService" doc:name="Java - HealthCheckPollingService" />
         </poll>
         <logger message="placeholder; 1 mule component is required after poll component" level="TRACE" doc:name="Logger - placeholder" />
