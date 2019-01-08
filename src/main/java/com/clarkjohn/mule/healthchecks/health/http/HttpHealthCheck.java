@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import com.clarkjohn.mule.healthchecks.MuleHealthCheck;
 import com.codahale.metrics.health.HealthCheck;
 
 /**
@@ -20,7 +21,7 @@ import com.codahale.metrics.health.HealthCheck;
  *
  * @author john@clarkjohn.com
  */
-public class HttpHealthCheck extends HealthCheck {
+public class HttpHealthCheck extends MuleHealthCheck {
 
     private static Logger LOG = LoggerFactory.getLogger(HttpHealthCheck.class);
 
@@ -72,6 +73,11 @@ public class HttpHealthCheck extends HealthCheck {
 
     private boolean is2xxResponseCode(String httpStatus) {
         return (httpStatus != null && httpStatus.length() > 0 && httpStatus.charAt(0) == '2') ? true : false;
+    }
+
+    @Override
+    public boolean isRunsOnceADay() {
+        return false;
     }
 
     @Override

@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import com.clarkjohn.mule.healthchecks.MuleHealthCheck;
 import com.codahale.metrics.health.HealthCheck;
 
 /**
@@ -31,7 +32,7 @@ import com.codahale.metrics.health.HealthCheck;
  *
  * @author john@clarkjohn.com
  */
-public class CertExpirationHealthCheck extends HealthCheck {
+public class CertExpirationHealthCheck extends MuleHealthCheck {
 
     private static Logger LOG = LoggerFactory.getLogger(CertExpirationHealthCheck.class);
 
@@ -139,6 +140,11 @@ public class CertExpirationHealthCheck extends HealthCheck {
         }
 
         return certStatusToCertAliasWithDaysToCertExpiresMap;
+    }
+
+    @Override
+    public boolean isRunsOnceADay() {
+        return true;
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import com.clarkjohn.mule.healthchecks.MuleHealthCheck;
 import com.codahale.metrics.health.HealthCheck;
 
 /**
@@ -17,7 +18,7 @@ import com.codahale.metrics.health.HealthCheck;
  *
  * @author john@clarkjohn.com
  */
-public class OpenPortHealthCheck extends HealthCheck {
+public class OpenPortHealthCheck extends MuleHealthCheck {
 
     private static Logger LOG = LoggerFactory.getLogger(OpenPortHealthCheck.class);
 
@@ -108,6 +109,11 @@ public class OpenPortHealthCheck extends HealthCheck {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isRunsOnceADay() {
+        return false;
     }
 
     @Override

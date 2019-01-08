@@ -1,5 +1,8 @@
 package com.clarkjohn.mule.healthchecks;
 
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -23,13 +26,46 @@ public class HealthCheckService {
 
     private static Logger LOG = LoggerFactory.getLogger(HealthCheckService.class);
 
+    private Instant onceADayNextRunInstant = null;
+
     @Inject
     private List<HealthCheckBuilder> healthCheckBuilderList;
 
     private HealthCheckRegistry healthCheckRegistry = new HealthCheckRegistry();
 
     public void executeHealthChecks() {
-        healthCheckRegistry.getNames().forEach(name -> execute(name, healthCheckRegistry.getHealthCheck(name)));
+
+        Instant currentInstant = ZonedDateTime.now().toInstant();
+
+        boolean isOnceADayHealthChecksToExecute = isOnceADayHealthChecksToExecute(currentInstant);
+        if (isOnceADayHealthChecksToExecute) {
+            onceADayNextRunInstant = currentInstant.plus(1, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS);
+        }
+
+        for (String healthCheckName : healthCheckRegistry.getNames()) {
+            HealthCheck healthCheck = healthCheckRegistry.getHealthCheck(healthCheckName);
+            if (isOnceADayHealthChecksToExecute && healthCheck instanceof MuleHealthCheck
+                    && ((MuleHealthCheck) healthCheck).isRunsOnceADay()) {
+
+                LOG.debug("Running a once a day healthcheck");
+                execute(healthCheckName, healthCheck);
+            } else {
+                execute(healthCheckName, healthCheck);
+            }
+        }
+    }
+
+    private boolean isOnceADayHealthChecksToExecute(Instant currentInstant) {
+
+        if (onceADayNextRunInstant == null) {
+            // first time running
+            return true;
+        } else if ((onceADayNextRunInstant != null) && currentInstant.isAfter(onceADayNextRunInstant)) {
+            // check if this was run first time today
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void execute(String healthCheckName, HealthCheck healthCheck) {
